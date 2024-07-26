@@ -2,6 +2,7 @@ package net.willowisp2002.espial;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -12,6 +13,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.willowisp2002.espial.block.ModBlocks;
+import net.willowisp2002.espial.item.ModCreativeModeTabs;
+import net.willowisp2002.espial.item.ModItems;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -26,7 +30,11 @@ public class Espial
     public Espial()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//bus registers for actually loading in the classes
+        ModCreativeModeTabs.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
+        ModItems.register(modEventBus);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -46,6 +54,10 @@ public class Espial
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){
+            event.accept(ModItems.PURPORIAL);
+            event.accept(ModItems.PURPORIAL_ROUGH);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
